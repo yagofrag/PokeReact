@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom";
 
 const Pokemon = (props) =>{
@@ -17,6 +17,23 @@ const Pokemon = (props) =>{
     const params=useParams();
 
 
+    useEffect(() => {
+        axios.get ("https://pokeapi.co/api/v2/pokemon/"+ ID)
+        .then(response=>{
+            console.log(response.data.name);
+            setNombre(response.data.name);
+            setImagefront(response.data.sprites.front_default);
+            setImageback(response.data.sprites.back_default);
+            setHP(getStats("hp",response.data.stats));
+            setAtaque(getStats("attack",response.data.stats));
+            setDefensa(getStats("defense",response.data.stats));
+        })
+    
+
+
+    } ,[])
+
+
     const ID = params.id;
 
     function getStats (nombreStat, arrayStats){
@@ -29,16 +46,6 @@ const Pokemon = (props) =>{
 
 
     //la sinatxis mas moderna es async-await
-    axios.get ("https://pokeapi.co/api/v2/pokemon/"+ ID)
-    .then(response=>{
-        console.log(response.data.name);
-        setNombre(response.data.name);
-        setImagefront(response.data.sprites.front_default);
-        setImageback(response.data.sprites.back_default);
-        setHP(getStats("hp",response.data.stats));
-        setAtaque(getStats("attack",response.data.stats));
-        setDefensa(getStats("defense",response.data.stats));
-    })
 
 
 
